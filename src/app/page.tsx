@@ -4,6 +4,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import FloatingBubbles from "./components/FloatingBubble";
+import { websiteUrls } from "./data/websites";
 
 interface CommonWord {
   word: string;
@@ -15,12 +16,6 @@ interface WebsiteData {
   title: string;
   commonWords: CommonWord[];
 }
-
-export const websiteUrls = [
-    "https://www.dandc.eu/en/article/multinational-music-collective-nile-project-sang-many-styles-and-languages-about-life-along",
-    "https://belonging.berkeley.edu/transcending-borders-through-music-interview-alsarah-nile-project",
-    "https://southwritlarge.com/articles/the-nile-project-interview-with-mina-girgis/"
-]
 
 export default function Home() {
     const [webData, setWebData] = useState<WebsiteData[]>([])

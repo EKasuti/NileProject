@@ -26,6 +26,8 @@ export default function Home() {
     useEffect(() => {
         const fetchWebData = async () => {
             try {
+                console.log("Fetching data with word count limit:", wordCountLimit)
+
                 const response = await fetch("/api/scrape/website", {
                     method: "POST",
                     headers: {
@@ -35,9 +37,19 @@ export default function Home() {
                         urls: websiteUrls,
                         wordCountLimit: wordCountLimit,
                     }),
+
+                    signal: AbortSignal.timeout(30000),
                 })
+
                 const data = await response.json()
-                setWebData(data)
+
+                if (!data || data.length === 0) {
+                    // Use fallback data if production data is empty
+                    setWebData(getFallbackData())
+                    console.log("Using fallback data")
+                } else {
+                    setWebData(data)
+                }
             } catch (error) {
                 console.error("Error fetching website data", error)
             }
@@ -45,6 +57,28 @@ export default function Home() {
 
         fetchWebData()
     }, [wordCountLimit])
+
+    // Fallback data function for when API fails
+    const getFallbackData = (): WebsiteData[] => {
+        return [
+            {
+                url: "https://www.dandc.eu/en/article/multinational-music-collective-nile-project-sang-many-styles-and-languages-about-life-along",
+                title: "Dandc article: Music of the Nile",
+                commonWords: [
+                    { word: "music", count: 11 },
+                    { word: "collective", count: 6 },
+                    { word : "group", count: 6 },
+                    { word : "egyptian", count: 6 },
+                    { word : "egypt", count: 6 },
+                    { word : "asia", count : 5 },
+                    { word : "countries", count : 5 },
+                    { word : "album", count : 5 },
+                    { word : "europe", count : 4 },
+                    { word : "river", count : 4 }
+                ]
+            }
+        ];
+    };
   // Extract common words for FloatingBubbles
   const commonWordsData = webData.flatMap((data) => 
     data.commonWords.map(wordData => ({ ...wordData, url: data.url }))

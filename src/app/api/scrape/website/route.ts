@@ -14,8 +14,11 @@ const stopWords = new Set([
     "since", "while", "along", "across", "against", "without", "within", "beyond", "upon", 
     "about", "out", "up", "down", "left", "right", "back", "forward", "here", "there", "wherever", 
     "whenever", "whatever", "whoever", "whenever", "however", "whatever", "jquery", "href", "var",
-    "one", "two", "three", "four", "five", "six", "seven", "eight", "nav", "been", "other", "have", "has", 
-    "can", "will", "why"
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    "first", "second", "third", "fourth", "fifth", "sixth",
+    "nav", "been", "other", "have", "has", 
+    "can", "will", "why",
+    "nile", "project", "main"
 ]);
 
 export async function POST(request: Request) {

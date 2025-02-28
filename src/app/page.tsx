@@ -19,7 +19,8 @@ interface WebsiteData {
 
 export default function Home() {
     const [webData, setWebData] = useState<WebsiteData[]>([])
-    const [wordCountLimit, setWordCountLimit] = useState<number>(8)
+    const [wordCountLimit, setWordCountLimit] = useState<number>(20)
+    const [dialogContent, setDialogContent] = useState<string | null>(null)
 
     // Fetch website data when wordCountLimit changes
     useEffect(() => {
@@ -45,7 +46,9 @@ export default function Home() {
         fetchWebData()
     }, [wordCountLimit])
   // Extract common words for FloatingBubbles
-  const commonWordsData: CommonWord[] = webData.flatMap((data) => data.commonWords)
+  const commonWordsData = webData.flatMap((data) => 
+    data.commonWords.map(wordData => ({ ...wordData, url: data.url }))
+  );
 
   // Helper functions for FloatingBubbles
   const maxCount = Math.max(...commonWordsData.map((item) => item.count))
@@ -177,6 +180,7 @@ export default function Home() {
                     animationName: getRandomAnimation(),
                     animationDelay: `${getRandomDelay()}s`,
                   }}
+                  onClick={() => setDialogContent(`URL: ${item.url}`)}
                 >
                   <div className="p-2" style={{ fontSize: `${fontSize}px` }}>
                     <p className="font-semibold text-gray-800 dark:text-white">{item.word}</p>
@@ -188,6 +192,21 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Dialog for displaying URL */}
+      {dialogContent && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded shadow-lg">
+            <p className="text-gray-800 dark:text-white">{dialogContent}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={() => setDialogContent(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
